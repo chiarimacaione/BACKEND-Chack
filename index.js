@@ -30,16 +30,20 @@ const PORT = ENVIROMENT.PORT || 3000;
 
 // Middlewares de seguridad
 app.use(helmet()); // Protección de cabeceras HTTP
+app.use(
+    helmet({
+      crossOriginResourcePolicy: false,
+    })
+  );
 
 // Configuración de CORS
-app.use(
-    cors({
-        origin: ENVIROMENT.URL_FRONTEND || 'http://localhost:5173',
-        credentials: true,
-        allowedHeaders: ['Content-Type', 'Authorization'],
-        methods: ['GET', 'POST', 'PUT', 'DELETE']
-    })
-);
+app.use(cors({
+    origin: ENVIROMENT.URL_FRONTEND || 'http://localhost:5173',
+    credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization', 'Access-Control-Allow-Origin'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE']
+}));
+
 
 
 app.use(express.json()); // Para leer el cuerpo de las peticiones en formato JSON
@@ -48,7 +52,13 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 // Servir los archivos estáticos de la carpeta 'uploads'
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads'), {
+    setHeaders: (res, path) => {
+        res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin'); // Permite compartir imágenes con el frontend
+        res.setHeader('Content-Type', 'image/jpeg'); // Asegura que se sirvan como imágenes
+    }
+}));
+
 
 // Limitador de peticiones para evitar ataques de fuerza bruta
 const limiter = rateLimit({
@@ -85,6 +95,8 @@ const initializeDatabase = async () => {
 };
 
 
+
+
 // Inicializar la base de datos al arrancar el servidor
 initializeDatabase();
 
@@ -109,7 +121,7 @@ app.use((error, req, res, next) => {
 
 app.listen(PORT, () => {
     console.log(`Servidor corriendo en puerto ${PORT}`);
-    console.log(`Accede al servidor en: http://localhost:${PORT}`);
+    console.log(`Accede al servidor en: ${ENVIROMENT.URL_FRONTEND}`);
 })
 
 

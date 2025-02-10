@@ -7,21 +7,39 @@ class WorkspaceRepository {
         if (!name || !id) {
             throw new ServerError("Workspace name and user ID are required", 400);
         }
-
+    
         try {
+            // Verificar si ya existe un workspace con el mismo nombre y propietario
+            const checkQuery = `SELECT COUNT(*) AS count FROM workspaces WHERE name = ? AND owner = ?`;
+            const [rows] = await pool.execute(checkQuery, [name, id]);
+    
+            if (rows[0].count > 0) {
+                throw new ServerError("Ya tienes un workspace con este nombre", 400);
+            }
+    
+            // Insertar el nuevo workspace
             const query = `INSERT INTO workspaces (name, owner) VALUES (?, ?)`;
             const [result] = await pool.execute(query, [name, id]);
-
-            const queryInsertMember = `INSERT INTO workspace_members (workspace_id, user_id) VALUES (?, ?)`;
-            await pool.execute(queryInsertMember, [result.insertId, id]);
-
+    
+            // Insertar al creador del workspace como "owner" en workspace_members
+            const queryInsertMember = `INSERT INTO workspace_members (workspace_id, user_id, role) VALUES (?, ?, ?)`;
+            await pool.execute(queryInsertMember, [result.insertId, id, "owner"]);
+    
             return { _id: result.insertId, name, id };
-        } catch (error) {
-            console.error("Error creating workspace:", error);
-            throw new ServerError("Failed to create workspace", 500);
         }
-    }
+        catch (error) {
+            console.error("Error creating workspace:", error.message, error.stack);
+            throw new ServerError(error.message || "Failed to create workspace", 500);
+        }
+    
+        }
 
+        async getWorkspaceByNameAndOwner(name, ownerId) {
+            const query = `SELECT * FROM workspaces WHERE name = ? AND owner = ?`;
+            const [rows] = await pool.execute(query, [name, ownerId]);
+            return rows.length > 0 ? rows[0] : null;
+        }
+        
     async findWorkspaceById(workspace_id) {
         if (!workspace_id) {
             throw new ServerError("Workspace ID is required", 400);

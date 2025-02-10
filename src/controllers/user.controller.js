@@ -52,7 +52,6 @@ export const loginUser = async (req, res) => {
 
 export const registerController = async (req, res) => {
     try {
-        console.log(req.body);
         const { username, email, password, name } = req.body;
 
         // Verifica si la foto fue cargada y si no, asigna null
@@ -63,35 +62,34 @@ export const registerController = async (req, res) => {
             return res.json({
                 ok: false,
                 status: 400,
-                message: 'Todos los campos son obligatorios.',
+                message: 'All fields are required.',
             });
         }
 
 
         if (!validateEmail(email)) {
-            return res.json({
+            return res.status(400).json({
                 ok: false,
-                status: 400,
-                message: 'Invalid email format',
+                message: 'Invalid email format.',
             });
         }
 
         if (!validatePassword(password)) {
-            return res.json({
+            return res.status(400).json({
                 ok: false,
-                status: 400,
-                message: 'Password must be at least 8 characters long',
+                message: "Password must be at least 8 characters long."
             });
         }
+        
 
         const user_found = await UserRepository.findUserByEmail(email);
 
         if (user_found) {
-            return res.json({
+            return res.status(400).json({
                 ok: false,
-                status: 400,
-                message: 'Email user already exists',
+                message: 'A user with this email already exists.',
             });
+            
         }
 
         // Si la foto no fue cargada, profilePicture será null
@@ -194,11 +192,11 @@ export const loginController = async (req, res) => {
         };
 
         if (!email || !(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g.test(email))) {
-            errors.email = "You must enter a valid value for email";
+            errors.email = "You must enter a valid value for email.";
         }
 
         if (!password) {
-            errors.password = "You must enter a password";
+            errors.password = "You must enter a password.";
         }
 
         let hayErrores = false;
@@ -222,7 +220,7 @@ export const loginController = async (req, res) => {
             return res.json({
                 ok: false,
                 status: 404,
-                message: "There is no user with this email",
+                message: "There is no user with this email.",
             });
         }
 
@@ -231,7 +229,7 @@ export const loginController = async (req, res) => {
             return res.json({
                 ok: false,
                 status: 400,
-                message: "Wrong password. Please try again",
+                message: "Wrong password. Please try again.",
             });
         }
 

@@ -16,23 +16,36 @@ const handleErrorResponse = (res, error) => {
 
 export const createWorkspaceController = async (req, res) => {
     try {
-        const { name, img, channels } = req.body; // Recibimos channels
+        const { name, img, channels } = req.body;
         const { id } = req.user;
 
-        // Accedemos al primer canal del array de channels
-        const channelName = channels[0]?.name || 'General'; // Si no hay un canal, usamos 'General'
+        //console.log("Datos recibidos:", { name, img, channels, userId: id });
+
+        if (!name || !id) {
+            return res.status(400).json({ ok: false, message: "Workspace name and user ID are required" });
+        }
+
+        // Verificamos si ya existe un workspace con el mismo nombre para el usuario
+        const existingWorkspace = await WorkspaceRepository.getWorkspaceByNameAndOwner(name, id);
+        if (existingWorkspace) {
+            return res.status(400).json({ ok: false, message: "You already have a workspace with this name" });
+        }
 
         const new_workspace = await WorkspaceRepository.createWorkspace({
             name,
             owner: id,
         });
 
+        //console.log("Nuevo workspace creado:", new_workspace);
+
+        const channelName = channels[0]?.name || 'General';
+
         const new_channel = await channelRepository.createChannel({
-            name: channelName, // Usamos el channelName recibido o 'General'
+            name: channelName,
             workspace_id: new_workspace._id,
         });
-        console.log('New Channel:', new_channel);  // Esto debería mostrar el _id correctamente
 
+        console.log("Nuevo canal creado:", new_channel);
 
         return res.status(201).json({
             ok: true,
@@ -44,9 +57,11 @@ export const createWorkspaceController = async (req, res) => {
             },
         });
     } catch (error) {
+        console.error("Error en createWorkspaceController:", error);
         handleErrorResponse(res, error);
     }
 };
+
 
 
 export const inviteUserToWorkspaceController = async (req, res) => {

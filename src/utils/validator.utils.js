@@ -4,5 +4,5 @@ export const validateEmail = (email) => {
 }
 
 export const validatePassword = (password) => {
-    return password.length >= 8;
-}
+    return typeof password === "string" && password.length >= 8;
+};
