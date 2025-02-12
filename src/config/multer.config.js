@@ -4,7 +4,7 @@ import path from 'path';
 // Configuración de Multer para guardar la imagen en un directorio 'uploads'
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'uploads/'); // El directorio donde se almacenarán las fotos
+        cb(null, '/src/uploads/'); // El directorio donde se almacenarán las fotos
     },
     filename: (req, file, cb) => {
         // Generar un nombre único para cada archivo (timestamp + extensión original)

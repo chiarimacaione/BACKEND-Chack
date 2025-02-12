@@ -55,7 +55,7 @@ export const registerController = async (req, res) => {
         const { username, email, password, name } = req.body;
 
         // Verifica si la foto fue cargada y si no, asigna null
-        const profilePicture = req.file ? `/uploads/${req.file.filename}` : null;
+        const profilePicture = req.file ? `/src/uploads/${req.file.filename}` : null;
 
         // Validación de campos obligatorios
         if (!username || !email || !password || !name) {
