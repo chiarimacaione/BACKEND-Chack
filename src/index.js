@@ -37,14 +37,11 @@ app.use(
 
 // Configuración de CORS
 app.use(cors({
-    origin: 'https://frontend-chack.vercel.app',
+    origin: '*',
     credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'Access-Control-Allow-Origin']
+    methods: ['GET', 'POST', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Access-Control-Allow-Origin, X-Requested-With, Content-Type, Accept']
 }));
-
-app.options('*', cors()); // Habilitar preflight para todas las rutas
-
 
 app.use(express.json()); // Para leer el cuerpo de las peticiones en formato JSON
 
