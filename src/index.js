@@ -4,7 +4,7 @@ import cors from "cors";
 import rateLimit from "express-rate-limit";
 import helmet from "helmet";
 import ENVIROMENT from "./config/enviroment.js";
-import path, { dirname } from "path";
+import { dirname } from "path";
 import { fileURLToPath } from 'url';
 
 // Rutas
@@ -52,6 +52,8 @@ var corsOptions = {
   app.use(cors(corsOptions));
 
 app.use(express.json()); // Para leer el cuerpo de las peticiones en formato JSON
+
+app.set('trust proxy', 1);
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
