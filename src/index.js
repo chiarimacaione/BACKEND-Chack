@@ -37,7 +37,7 @@ app.use(
 
 // Configuración de CORS
 app.use(cors({
-    origin: ENVIROMENT.URL_FRONTEND || 'http://localhost:5173',
+    origin: ENVIROMENT.URL_FRONTEND,
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization', 'Access-Control-Allow-Origin'],
     methods: ['GET', 'POST', 'PUT', 'DELETE']

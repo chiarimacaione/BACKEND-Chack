@@ -108,7 +108,7 @@ export const registerController = async (req, res) => {
                     <div style="background-color: #ffffff; padding: 20px; border-radius: 8px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
                         <p style="font-size: 16px; color: #555555;">To continue using Chack, click the button below to verify your email address:</p>
                         <div style="text-align: center; margin-top: 20px;">
-                            <a href="http://localhost:${ENVIROMENT.PORT}/users/verify-email?${QUERY.VERIFICATION_TOKEN}=${verificationToken}" 
+                            <a href="https://backend-chack.vercel.app/users/verify-email?${QUERY.VERIFICATION_TOKEN}=${verificationToken}" 
                                 style="background-color:rgb(109, 52, 145); color: white; padding: 15px 30px; font-size: 16px; border-radius: 5px; text-decoration: none; font-weight: bold;">
                                 Verify Email
                             </a>
