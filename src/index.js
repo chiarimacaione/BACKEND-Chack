@@ -45,6 +45,12 @@ app.use(cors({
 
 app.options('*', cors())
 
+var corsOptions = {
+    origin: 'https://frontend-chack.vercel.app',
+  };
+  
+  app.use(cors(corsOptions));
+
 app.use(express.json()); // Para leer el cuerpo de las peticiones en formato JSON
 
 const __filename = fileURLToPath(import.meta.url);
