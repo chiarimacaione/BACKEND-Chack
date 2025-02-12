@@ -1,4 +1,3 @@
-import messageRepository from '../repository/message.repository.js';
 import pool from '../config/mysql.config.js'
 import messageModel from '../models/message.model.js';
 
@@ -42,8 +41,6 @@ export const createMessage = async (req, res) => {
         return res.status(500).json({ ok: false, message: 'Error al crear mensaje' });
     }
 };
-
-
 
 // Función para obtener los mensajes de un canal
 export const getMessagesByChannel = async (req, res) => {

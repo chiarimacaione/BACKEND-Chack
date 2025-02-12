@@ -1,15 +1,12 @@
 import express from 'express'
 import { userMiddleware } from '../middlewares/user.middleware.js'
 import { createWorkspaceController, getWorkspacesController, inviteUserToWorkspaceController } from '../controllers/workspace.controller.js'
-// Middleware para verificar el token
-import verifyToken from '../middlewares/verifyToken.middleware.js';
 
 const workspaceRoutes = express.Router()
 
 workspaceRoutes.post("/", userMiddleware, createWorkspaceController)
-workspaceRoutes.post('/:workspace_id/invite', userMiddleware, inviteUserToWorkspaceController)
-workspaceRoutes.get('/', userMiddleware, getWorkspacesController)
 
+workspaceRoutes.get('/', userMiddleware, getWorkspacesController)
 
 workspaceRoutes.get('/:workspace_id', userMiddleware, async (req, res) => {
     const { workspace_id } = req.params;
@@ -28,5 +25,9 @@ workspaceRoutes.get('/:workspace_id', userMiddleware, async (req, res) => {
         handleErrorResponse(res, error);
     }
 });
+
+
+workspaceRoutes.post('/:workspace_id/invite', userMiddleware, inviteUserToWorkspaceController);
+
 
 export default workspaceRoutes

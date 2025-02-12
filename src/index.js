@@ -3,24 +3,23 @@ import dotenv from "dotenv";
 import cors from "cors";
 import rateLimit from "express-rate-limit";
 import helmet from "helmet";
-import ENVIROMENT from "./src/config/enviroment.js";
+import ENVIROMENT from "./config/enviroment.js";
 import path, { dirname } from "path";
 import { fileURLToPath } from 'url';
 
 // Rutas
-import statusRoutes from './src/routes/status.routes.js';
-import userRoutes from "./src/routes/user.routes.js";
-import channelRoutes from './src/routes/channel.routes.js';
-import workspaceRoutes from './src/routes/workspace.routes.js';
-import messageRoutes from "./src/routes/message.routes.js";
+import statusRoutes from './routes/status.routes.js';
+import userRoutes from "./routes/user.routes.js";
+import channelRoutes from './routes/channel.routes.js';
+import workspaceRoutes from './routes/workspace.routes.js';
+import messageRoutes from "./routes/message.routes.js";
 
 // Conexión a la base de datos y modelos
-import createUserTable from './src/models/user.model.js';
-import createChannelTable from './src/models/channel.model.js';
-import createWorkspaceTable from './src/models/workspace.model.js';
-import createMessageTable from './src/models/message.model.js';
-import createWorkspaceMembersTable from './src/models/workspace_members.model.js'
-import messageModel from "./src/models/message.model.js";
+import createUserTable from './models/user.model.js';
+import createChannelTable from './models/channel.model.js';
+import createWorkspaceTable from './models/workspace.model.js';
+import createWorkspaceMembersTable from './models/workspace_members.model.js'
+import messageModel from "./models/message.model.js";
 
 // Configurar dotenv para cargar variables de entorno
 dotenv.config();
@@ -32,9 +31,9 @@ const PORT = ENVIROMENT.PORT || 3000;
 app.use(helmet()); // Protección de cabeceras HTTP
 app.use(
     helmet({
-      crossOriginResourcePolicy: false,
+        crossOriginResourcePolicy: false,
     })
-  );
+);
 
 // Configuración de CORS
 app.use(cors({
@@ -93,8 +92,6 @@ const initializeDatabase = async () => {
         console.error("Error al crear las tablas:", error);
     }
 };
-
-
 
 
 // Inicializar la base de datos al arrancar el servidor

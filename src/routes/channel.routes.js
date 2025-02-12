@@ -8,8 +8,11 @@ const channelRoutes = express.Router()
 channelRoutes.use(userMiddleware)
 
 channelRoutes.post('/:workspace_id',isWorkspaceMemberMiddleware, createChannelController)
+
 channelRoutes.get('/:workspace_id',isWorkspaceMemberMiddleware, getChannelsListController)
+
 channelRoutes.post('/:workspace_id/:channel_id/send-message', isWorkspaceMemberMiddleware, sendMessageController)
+
 channelRoutes.get('/:workspace_id/:channel_id', isWorkspaceMemberMiddleware, getMessagesFromChannelController)
 
 export default channelRoutes

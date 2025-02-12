@@ -4,6 +4,7 @@ import { createMessage, getMessagesByChannel } from '../controllers/message.cont
 const messageRoutes = express.Router();
 
 messageRoutes.post('/', createMessage)
+
 messageRoutes.get('/:channel_id', getMessagesByChannel)
 
 export default messageRoutes;

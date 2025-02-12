@@ -1,7 +1,8 @@
 import WorkspaceRepository from "../repository/workspace.repository.js";
-import UserRepository from "../repository/user.repository.js";
-import { ServerError } from "../utils/errors.utils.js";
 import channelRepository from "../repository/channel.repository.js";
+import jwt from 'jsonwebtoken';
+import ENVIROMENT from '../config/enviroment.js';
+import pool from '../config/mysql.config.js';
 
 const handleErrorResponse = (res, error) => {
     console.error(error);
@@ -28,7 +29,10 @@ export const createWorkspaceController = async (req, res) => {
         // Verificamos si ya existe un workspace con el mismo nombre para el usuario
         const existingWorkspace = await WorkspaceRepository.getWorkspaceByNameAndOwner(name, id);
         if (existingWorkspace) {
-            return res.status(400).json({ ok: false, message: "You already have a workspace with this name" });
+            return res.status(400).json({
+                ok: false,
+                message: "You already have a workspace with this name"
+            });
         }
 
         const new_workspace = await WorkspaceRepository.createWorkspace({
@@ -62,33 +66,6 @@ export const createWorkspaceController = async (req, res) => {
     }
 };
 
-
-
-export const inviteUserToWorkspaceController = async (req, res) => {
-    try {
-        const { id } = req.user;
-        const { workspace_id } = req.params;
-        const { email } = req.body;
-
-        const user_invited = await UserRepository.findUserByEmail(email);
-        if (!user_invited) {
-            throw new ServerError('User not found', 404);
-        }
-
-        const workspace_modified = await WorkspaceRepository.addMemberToWorkspace(workspace_id, id, user_invited._id);
-        return res.status(201).json({
-            ok: true,
-            status: 201,
-            message: 'User invited successfully',
-            data: {
-                workspace_selected: workspace_modified,
-            },
-        });
-    } catch (error) {
-        handleErrorResponse(res, error);
-    }
-};
-
 export const getWorkspacesController = async (req, res) => {
     try {
         const { id } = req.user;
@@ -111,3 +88,50 @@ export const getWorkspacesController = async (req, res) => {
         handleErrorResponse(res, error);
     }
 };
+
+export const inviteUserToWorkspaceController = async (req, res) => {
+    const { workspace_id } = req.params;
+    const { email } = req.body;  // Recibimos el correo del body de la solicitud
+
+    //console.log('Request Body:', req.body);  // Verifica los datos recibidos en el backend
+
+    // Verificar que el correo tiene un formato válido
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+    if (!emailRegex.test(email)) {
+        return res.status(400).json({ message: 'Invalid email' });
+    }
+
+    // Verificar que el usuario es el dueño del workspace
+    const [workspace] = await pool.query('SELECT * FROM workspaces WHERE _id = ? AND owner = ?', [workspace_id, req.user.id]);
+
+    if (!workspace) {
+        return res.status(403).json({ message: 'You do not have permission to add users to this workspace.' });
+    }
+
+    //console.log('Workspace found:', workspace);  // Verifica si se encuentra el workspace
+
+    // Verificar si el usuario existe
+    const [user] = await pool.query('SELECT * FROM users WHERE email = ?', [email]);
+    //console.log('User found:', user);
+
+    if (!user || user.length === 0) {
+        return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Acceder correctamente al id
+    const userId = user[0]._id;  // Si user es un arreglo, usa el primer elemento
+
+    //console.log('User ID:', userId);
+
+    const [existingMember] = await pool.query('SELECT * FROM workspace_members WHERE workspace_id = ? AND user_id = ?', [workspace_id, userId]);
+
+    if (existingMember.length > 0) {
+        //console.log('User already a member:', existingMember);  // Verifica si el usuario ya es miembro
+        return res.status(400).json({ message: 'The user is already a member of the workspace.' });
+    }
+
+    // Agregar al usuario como miembro del workspace
+    await pool.query('INSERT INTO workspace_members (workspace_id, user_id) VALUES (?, ?)', [workspace_id, userId]);
+
+    return res.json({ message: 'User successfully added to the workspace' });
+}
