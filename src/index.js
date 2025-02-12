@@ -40,10 +40,10 @@ app.use(cors({
     origin: 'https://frontend-chack.vercel.app',
     credentials: true,
     methods: ['GET', 'POST', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'Access-Control-Allow-Origin, X-Requested-With, Content-Type, Accept']
+    allowedHeaders: ['Content-Type', 'Authorization', 'Access-Control-Allow-Origin', 'X-Requested-With', 'Content-Type', 'Accept']
 }));
 
-app.options('*', cors())
+app.options('*', cors()); 
 
 var corsOptions = {
     origin: 'https://frontend-chack.vercel.app',

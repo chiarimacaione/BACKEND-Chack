@@ -2,7 +2,7 @@ import { v2 as cloudinary } from 'cloudinary';
 import { CloudinaryStorage } from 'multer-storage-cloudinary';
 import multer from 'multer';
 import dotenv from 'dotenv';
-import ENVIROMENT from './enviroment';
+import ENVIROMENT from './enviroment.js';
 
 dotenv.config();
 
@@ -12,6 +12,7 @@ cloudinary.config({
     api_key: ENVIROMENT.CLOUDINARY.CLD_API_KEY,
     api_secret: ENVIROMENT.CLOUDINARY.CLD_API_SECRET
 });
+
 
 // Configuración de Multer para usar Cloudinary
 const storage = new CloudinaryStorage({
