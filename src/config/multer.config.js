@@ -1,18 +1,28 @@
+import { v2 as cloudinary } from 'cloudinary';
+import { CloudinaryStorage } from 'multer-storage-cloudinary';
 import multer from 'multer';
-import path from 'path';
+import dotenv from 'dotenv';
+import ENVIROMENT from './enviroment';
 
-// Configuración de Multer para guardar la imagen en un directorio 'uploads'
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, '/src/uploads/'); // El directorio donde se almacenarán las fotos
-    },
-    filename: (req, file, cb) => {
-        // Generar un nombre único para cada archivo (timestamp + extensión original)
-        cb(null, Date.now() + path.extname(file.originalname));
+dotenv.config();
+
+// Configuración de Cloudinary
+cloudinary.config({
+    cloud_name: ENVIROMENT.CLOUDINARY.CLD_CLOUD_NAME,
+    api_key: ENVIROMENT.CLOUDINARY.CLD_API_KEY,
+    api_secret: ENVIROMENT.CLOUDINARY.CLD_API_SECRET
+});
+
+// Configuración de Multer para usar Cloudinary
+const storage = new CloudinaryStorage({
+    cloudinary,
+    params: {
+        folder: 'chack-profile-pictures', // Carpeta donde se guardarán las imágenes en Cloudinary
+        format: async (req, file) => 'png', // Formato de imagen
+        public_id: (req, file) => Date.now() + '-' + file.originalname, // Nombre único
     },
 });
 
 const upload = multer({ storage });
 
-// Exportar la función para su uso en las rutas
 export default upload;

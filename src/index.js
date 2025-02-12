@@ -48,7 +48,6 @@ app.use(express.json()); // Para leer el cuerpo de las peticiones en formato JSO
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// Servir los archivos estáticos de la carpeta 'uploads'
 app.use('/src/uploads', express.static(path.join(__dirname, 'src/uploads'), {
     setHeaders: (res, path) => {
         res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin'); // Permite compartir imágenes con el frontend

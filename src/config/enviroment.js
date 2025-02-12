@@ -17,6 +17,11 @@ const ENVIROMENT = {
         DB_PASSWORD: process.env.DB_PASSWORD,
         DB_NAME: process.env.DB_NAME,
         DB_PORT: process.env.DB_PORT
+    },
+    CLOUDINARY: {
+        CLD_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME,
+        CLD_API_KEY: process.env.CLOUDINARY_API_KEY,
+        CLD_API_SECRET: process.env.CLOUDINARY_API_SECRET
     }
 }
 

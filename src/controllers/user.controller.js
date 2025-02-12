@@ -55,7 +55,7 @@ export const registerController = async (req, res) => {
         const { username, email, password, name } = req.body;
 
         // Verifica si la foto fue cargada y si no, asigna null
-        const profilePicture = req.file ? `/src/uploads/${req.file.filename}` : null;
+        const profilePicture = req.file ? req.file.path : null;
 
         // Validación de campos obligatorios
         if (!username || !email || !password || !name) {
@@ -92,7 +92,7 @@ export const registerController = async (req, res) => {
             
         }
 
-        // Si la foto no fue cargada, profilePicture será null
+        // Si la foto no fue cargada o hay un problema, profilePicture será null
         const profilePictureUrl = profilePicture || null;
         const verificationToken = jwt.sign({ email }, ENVIROMENT.SECRET_KEY_JWT, { expiresIn: '1d' });
 
@@ -125,7 +125,7 @@ export const registerController = async (req, res) => {
             name,
             username,
             email,
-            profilePicture: profilePictureUrl,  // Se asigna la ruta de la foto o null
+            profilePicture,
             password: password_hash,
             verificationToken: verificationToken
         });
