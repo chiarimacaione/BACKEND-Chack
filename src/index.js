@@ -37,23 +37,25 @@ app.use(
 
 // Configuración de CORS
 app.use(cors({
-    origin: '*',
+    origin: 'https://frontend-chack.vercel.app',
     credentials: true,
     methods: ['GET', 'POST', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'Access-Control-Allow-Origin, X-Requested-With, Content-Type, Accept']
 }));
+
+app.options('*', cors())
 
 app.use(express.json()); // Para leer el cuerpo de las peticiones en formato JSON
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-app.use('/src/uploads', express.static(path.join(__dirname, 'src/uploads'), {
+/* app.use('/src/uploads', express.static(path.join(__dirname, 'src/uploads'), {
     setHeaders: (res, path) => {
         res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin'); // Permite compartir imágenes con el frontend
         res.setHeader('Content-Type', 'image/jpeg'); // Asegura que se sirvan como imágenes
     }
-}));
+})); */
 
 
 // Limitador de peticiones para evitar ataques de fuerza bruta
