@@ -43,7 +43,7 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization', 'Access-Control-Allow-Origin']
 }));
 
-
+app.options('*', cors()); // Habilitar preflight para todas las rutas
 
 
 app.use(express.json()); // Para leer el cuerpo de las peticiones en formato JSON
