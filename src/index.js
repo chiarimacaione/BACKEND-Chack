@@ -125,7 +125,7 @@ app.use((error, req, res, next) => {
 
 app.listen(PORT, () => {
     console.log(`Servidor corriendo en puerto ${PORT}`);
-    console.log(`Accede al servidor en: ${ENVIROMENT.URL_FRONTEND}`);
+    console.log(`Accede al servidor en: ${ENVIROMENT.URL_BACKEND}`);
 })
 
 
