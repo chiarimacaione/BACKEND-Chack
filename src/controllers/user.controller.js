@@ -52,7 +52,6 @@ export const loginUser = async (req, res) => {
 
 export const registerController = async (req, res) => {
     try {
-        console.log('Registro iniciado', req.body);
         const { username, email, password, name } = req.body;
 
         // Verifica si la foto fue cargada y si no, asigna null
@@ -284,7 +283,6 @@ export const profileController = (req, res) => {
             profilePicture: req.user.profilePicture
         },
     });
-    console.log(req.user);
 };
 
 
