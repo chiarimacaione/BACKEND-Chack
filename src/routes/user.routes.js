@@ -14,4 +14,6 @@ userRoutes.get('/verify-email', verifyEmailController)
 userRoutes.get('/profile', userMiddleware, profileController)
 
 
+
+
 export default userRoutes

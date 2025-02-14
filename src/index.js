@@ -37,7 +37,7 @@ app.use(
 
 // Configuración de CORS
 app.use(cors({
-    origin: 'https://frontend-chack.vercel.app',
+    origin: '*',
     credentials: true,
     methods: ['GET', 'POST', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'Access-Control-Allow-Origin', 'X-Requested-With', 'Content-Type', 'Accept']
@@ -46,7 +46,7 @@ app.use(cors({
 app.options('*', cors()); 
 
 var corsOptions = {
-    origin: 'https://frontend-chack.vercel.app',
+    origin: '*',
   };
   
   app.use(cors(corsOptions));
